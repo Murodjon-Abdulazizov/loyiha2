@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sehrli Bog'cha - O'yinli Talqin</title>
+    <style>
+        :root {
+            --meva-bg: linear-gradient(45deg, #ff7675, #fab1a0);
+            --sabzi-bg: linear-gradient(45deg, #55efc4, #81ecec);
+            --oyin-bg: linear-gradient(45deg, #ffeaa7, #fdcb6e);
+            --info-bg: linear-gradient(45deg, #a29bfe, #6c5ce7);
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 { color: #2d3436; font-size: 28px; margin-bottom: 25px; }
+
+        #main-menu { display: flex; flex-direction: column; gap: 15px; }
+
+        .menu-card {
+            display: flex; align-items: center; padding: 15px 25px;
+            border-radius: 25px; border: none; color: white;
+            font-size: 24px; font-weight: bold; cursor: pointer;
+            transition: 0.3s; box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        .menu-card img { width: 55px; height: 55px; margin-right: 20px; object-fit: contain; }
+
+        .section {
+            display: none; background: white; padding: 25px;
+            border-radius: 35px; box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .home-btn {
+            background: #333; color: white; border: none; padding: 12px 25px;
+            border-radius: 20px; font-weight: bold; cursor: pointer; margin-bottom: 20px;
+        }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        .item-box {
+            background: #f9f9f9; padding: 15px; border-radius: 20px;
+            border: 2px solid #eee; cursor: pointer; transition: 0.2s;
+        }
+        .item-box img { width: 85px; height: 85px; object-fit: contain; }
+        .item-box p { margin: 10px 0 0; font-weight: bold; font-size: 18px; }
+
+        /* O'yin uchun qo'shimcha dizayn */
+        .game-header { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold; color: #6c5ce7; }
+        .progress-bar { width: 100%; height: 10px; background: #eee; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #6c5ce7; width: 0%; transition: 0.3s; }
+
+        .info-visuals { display: flex; align-items: center; justify-content: center; gap: 15px; margin: 20px 0; }
+        .info-img-box { width: 125px; height: 125px; background: #fff; border: 3px solid #eee; border-radius: 20px; padding: 10px; }
+        .info-img-box img { width: 100%; height: 100%; object-fit: contain; }
+        .plus { font-size: 35px; font-weight: bold; color: #ff7675; }
+        .btn-action { width: 100%; padding: 15px; border-radius: 20px; border: none; color: white; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="main-title">🌟 Sehrli Bog'cha</h1>
+
+    <div id="main-menu">
+        <button class="menu-card" style="background: var(--meva-bg)" onclick="openSection('mevalar')"><img src="images/meva_icon.png"> Mevalar</button>
+        <button class="menu-card" style="background: var(--sabzi-bg)" onclick="openSection('sabzavotlar')"><img src="images/sabzi_icon.png"> Sabzavotlar</button>
+        <button class="menu-card" style="background: var(--oyin-bg)" onclick="openSection('oyin')"><img src="images/game_icon.png"> O'yin</button>
+        <button class="menu-card" style="background: var(--info-bg)" onclick="openSection('info')"><img src="images/book_icon.png"> Foydali</button>
+    </div>
+
+    <div id="mevalar" class="section"><button class="home-btn" onclick="goHome()">🏠 Orqaga</button><div class="grid" id="meva-grid"></div></div>
+    <div id="sabzavotlar" class="section"><button class="home-btn" onclick="goHome()">🏠 Orqaga</button><div class="grid" id="sabzi-grid"></div></div>
+
+    <div id="oyin" class="section">
+        <button class="home-btn" onclick="goHome()">🏠 Chiqish</button>
+        <div class="game-header">
+            <span id="game-step">Bosqich: 1/10</span>
+            <span id="game-score">Ball: 0</span>
+        </div>
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+        <h3 id="game-quest">Ortiqchasini top!</h3>
+        <div id="game-grid" class="grid"></div>
+        <h2 id="game-status" style="margin-top:20px;">Qani boshladik!</h2>
+    </div>
+
+    <div id="info" class="section">
+        <button class="home-btn" onclick="goHome()">🏠 Orqaga</button>
+        <div class="info-visuals">
+            <div class="info-img-box"><img id="info-meva-img" src=""></div>
+            <div class="plus">➕</div>
+            <div class="info-img-box"><img id="info-tana-img" src=""></div>
+        </div>
+        <p id="info-text" style="font-size: 20px; font-weight: bold; min-height: 60px; color: #444;"></p>
+        <button class="btn-action" style="background:#6c5ce7" onclick="playSfx(infoData[currentIdx].id + '_info')">🔊 Eshitish</button>
+        <button class="btn-action" style="background:#fdcb6e; color:#333" onclick="nextFact()">Keyingisi ➡️</button>
+    </div>
+</div>
+
+<script>
+    const mevalarList = ['olma', 'banan', 'uzum', 'nok', 'gilos', 'shaftoli', 'qovun', 'tarvuz'];
+    const sabzilarList = ['sabzi', 'pomidor', 'bodring', 'baqlajon', 'kartoshka', 'piyoz', 'qalampir', 'makkajoxori'];
+    const infoData = [
+        { id: 'olma', body: 'tish', text: 'Olma tishlarni mustahkam qiladi!' },
+        { id: 'sabzi', body: 'koz', text: 'Sabzi ko\'zlar o\'tkir bo\'lishi uchun foydali!' },
+        { id: 'pomidor', body: 'yurak', text: 'Pomidor yurakning yaxshi ishlashiga yordam beradi!' },
+        { id: 'banan', body: 'mushak', text: 'Banan senga kuch va quvvat beradi!' }
+    ];
+
+    let currentIdx = 0;
+    let currentAudio = null;
+    let gameStep = 1;
+    let score = 0;
+
+    function playSfx(fileName) {
+        if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+        currentAudio = new Audio(`sounds/${fileName}.ogg`);
+        currentAudio.play().catch(err => console.log("Ovoz topilmadi"));
+    }
+
+    function openSection(id) {
+        document.getElementById('main-menu').style.display = 'none';
+        document.getElementById('main-title').style.display = 'none';
+        document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        playSfx(id + '_intro');
+        if(id === 'mevalar') loadGrid('meva-grid', mevalarList);
+        if(id === 'sabzavotlar') loadGrid('sabzi-grid', sabzilarList);
+        if(id === 'info') updateInfo();
+        if(id === 'oyin') { gameStep = 1; score = 0; updateGameHeader(); setupGame(); }
+    }
+
+    function loadGrid(gridId, list) {
+        const grid = document.getElementById(gridId);
+        grid.innerHTML = '';
+        list.forEach(item => {
+            grid.innerHTML += `<div class="item-box" onclick="playSfx('${item}')"><img src="images/${item}.png"><p>${item.charAt(0).toUpperCase() + item.slice(1)}</p></div>`;
+        });
+    }
+
+    function goHome() {
+        if (currentAudio) currentAudio.pause();
+        document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+        document.getElementById('main-menu').style.display = 'flex';
+        document.getElementById('main-title').style.display = 'block';
+    }
+
+    // O'YIN MANTIQI
+    function updateGameHeader() {
+        document.getElementById('game-step').innerText = `Bosqich: ${gameStep}/10`;
+        document.getElementById('game-score').innerText = `Ball: ${score}`;
+        document.getElementById('progress-fill').style.width = `${(gameStep / 10) * 100}%`;
+    }
+
+    function setupGame() {
+        if (gameStep > 10) {
+            finishGame();
+            return;
+        }
+
+        const grid = document.getElementById('game-grid');
+        grid.innerHTML = '';
+        
+        // Tasodifiy 3 ta meva va 1 ta sabzavot (yoki aksincha) tanlash
+        let isMevaQuest = Math.random() > 0.5;
+        let questItems = [];
+        
+        if (isMevaQuest) {
+            document.getElementById('game-quest').innerText = "Sabzavotni top!";
+            let shuffledMevalar = [...mevalarList].sort(() => 0.5 - Math.random()).slice(0, 3);
+            let oneSabzi = sabzilarList[Math.floor(Math.random() * sabzilarList.length)];
+            questItems = shuffledMevalar.map(i => ({img: i, c: false})).concat({img: oneSabzi, c: true});
+        } else {
+            document.getElementById('game-quest').innerText = "Mevani top!";
+            let shuffledSabzi = [...sabzilarList].sort(() => 0.5 - Math.random()).slice(0, 3);
+            let oneMeva = mevalarList[Math.floor(Math.random() * mevalarList.length)];
+            questItems = shuffledSabzi.map(i => ({img: i, c: false})).concat({img: oneMeva, c: true});
+        }
+
+        questItems.sort(() => 0.5 - Math.random()).forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'item-box';
+            div.innerHTML = `<img src="images/${item.img}.png">`;
+            div.onclick = () => handleChoice(item.c);
+            grid.appendChild(div);
+        });
+    }
+
+    function handleChoice(isCorrect) {
+        if (isCorrect) {
+            score += 10;
+            document.getElementById('game-status').innerText = "Barakalla! 🎉";
+            playSfx('win');
+        } else {
+            document.getElementById('game-status').innerText = "Keyingi safar topasan! 😊";
+            playSfx('error');
+        }
+
+        // 1.5 soniyadan keyin keyingi bosqichga o'tish
+        setTimeout(() => {
+            gameStep++;
+            updateGameHeader();
+            document.getElementById('game-status').innerText = "Tayyormisan?";
+            setupGame();
+        }, 1500);
+    }
+
+    function finishGame() {
+        document.getElementById('game-grid').innerHTML = '';
+        document.getElementById('game-quest').innerText = "O'yin tugadi!";
+        document.getElementById('game-status').innerHTML = `Sening natijang: ${score} ball! <br><br> <button class="home-btn" onclick="openSection('oyin')">Yana o'ynash</button>`;
+        playSfx('info_intro'); // Yakuniy ovoz sifatida ishlatsa bo'ladi
+    }
+
+    function updateInfo() {
+        const item = infoData[currentIdx];
+        document.getElementById('info-meva-img').src = `images/${item.id}.png`;
+        document.getElementById('info-tana-img').src = `images/${item.body}.png`;
+        document.getElementById('info-text').innerText = item.text;
+    }
+
+    function nextFact() {
+        currentIdx = (currentIdx + 1) % infoData.length;
+        updateInfo();
+        playSfx(infoData[currentIdx].id);
+    }
+</script>
+</body>
+</html>
